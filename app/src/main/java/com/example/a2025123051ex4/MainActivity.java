@@ -50,18 +50,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.setClass(MainActivity.this,MyService.class);
         switch (v.getId()){
             case R.id.btn_main_activity_bind_service:
+            if(!isServiceBind){
                 tvServiceStatus.setText("Service created");
                 bindService(intent,conn, Service.BIND_AUTO_CREATE);
+                isServiceBind=true;
+            }
 //如果service 尚未绑定就绑定，如果已经绑定则忽略
                 break;
             case R.id.btn_main_activity_get_status:
-                tvServiceStatus.setText(serviceBinder.getCount());
+                if(isServiceBind){
+                    tvServiceStatus.setText(serviceBinder.getCount()+"");
+                }
 //如果service 已经绑定，获取service 的count 计数并显示在截面上。
                 break;
             case R.id.btn_main_activity_unbind_service:
 //如果service 已经绑定，则可以解绑，否则忽略
-                tvServiceStatus.setText("Service Unbind");
-                unbindService(conn);
+                if(isServiceBind){    
+                    tvServiceStatus.setText("Service Unbind");
+                    unbindService(conn);
+                    isServiceBind=false;
+                }
                 break;
         }
     }
